@@ -7,9 +7,10 @@
         <RouterLink to="/about" class="mr-4">About</RouterLink>
         <RouterLink to="/products" class="mr-4">Products</RouterLink>
         <RouterLink to="/auth" class="mr-4">Auth</RouterLink>
-        <RouterLink to="/admin" class="mr-4">Admin</RouterLink>
+        <RouterLink v-if="isLoggedIn" to="/admin" class="mr-4">Admin</RouterLink>
         <!-- RouterLink to products, Auth, Admin & and logout button -->
 
+        <button @click="logout" v-if="isLoggedIn" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Logout</button>
 
         <!-- toggle cart button -->
 
@@ -29,7 +30,14 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
+import { useUsers } from './modules/auth/useUsers'
+import { state } from './modules/globalStates/state'
+
+const { logout } = useUsers()
+
+const isLoggedIn = computed(() => state.isLoggedIn)
 
 </script>
 

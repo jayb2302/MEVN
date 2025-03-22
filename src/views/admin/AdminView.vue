@@ -72,7 +72,7 @@
         <div class="mt-4 flex space-x-2"> <!-- Update and delete buttons -->
           <p>ID:  </p> <!-- Product ID for testing -->
           <button @click="deleteProduct(product._id)"  class="bg-red-600 text-white p-2 rounded hover:bg-red-700">Delete</button> <!-- Delete button -->
-          <button  class="bg-green-600 text-white p-2 rounded hover:bg-green-700">Edit</button> <!-- Edit button -->
+          <button  @click="updateProductHandler(product)" class="bg-green-600 text-white p-2 rounded hover:bg-green-700">Edit</button> <!-- Edit button -->
          </div>
       </div>
     </div>
@@ -85,8 +85,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useProducts } from '@/modules/useProducts';
+import type { Product } from '@/interfaces/interfaces';
 
-const { products, loading, error, fetchProducts, deleteProduct, addProduct, getTokenAndUserId } = useProducts();
+const { products, loading, error, fetchProducts, deleteProduct, addProduct, getTokenAndUserId, updateProduct } = useProducts();
 
 onMounted(() => {
   fetchProducts();
@@ -112,6 +113,20 @@ const addProductHandler = async () => {
     ...newProduct.value,
   }
 };
+
+const updateProductHandler = async(product: Product) => {
+  const updatedProduct = {
+    name: product.name,
+    description: product.description,
+    price: product.price,
+    stock: product.stock,
+    discount: product.discount,
+    discountPct: product.discountPct,
+    isHidden: product.isHidden,
+    imageURL: product.imageURL,
+  }
+  await updateProduct(product._id, updatedProduct);
+}
 
 </script>
 

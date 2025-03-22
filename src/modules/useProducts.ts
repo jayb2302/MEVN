@@ -118,6 +118,50 @@ export const useProducts = () => {
     }
   };
 
+  const updateProductOnServer = async (id: string, updatedProduct: Partial<Product>, token: string): Promise<Product> => {
+    const response = await fetch(`http://localhost:4000/api/products/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token": token,
+      },
+      body: JSON.stringify(updatedProduct),
+    });
+    
+    if (!response.ok) {
+      throw new Error("No data available");
+    }
+    
+    const responseText = await response.text();
+    try {
+      return JSON.parse(responseText);
+    }
+    catch{
+      return { message: responseText } as unknown as Product;
+    }
+  }
+
+  const updateProductInState = (id: string, updatedProduct: Partial<Product>): void => {
+    const index = products.value.findIndex(product => product._id === id);
+
+    if (index !== -1) {
+      products.value[index] = { ...products.value[index], ...updatedProduct }
+      
+    }
+  };
+
+  const updateProduct = async (id: string, updatedProduct: Partial<Product>): Promise<void> => {
+    try {
+      const { token } = getTokenAndUserId();
+      const updatedProductResponse = await updateProductOnServer(id, updatedProduct, token);
+      updateProductInState(id, updatedProductResponse);
+      await fetchProducts();
+    }
+    catch (err) {
+      error.value = (err as Error).message;
+    }
+  }
+
   return {
     error,
     loading,
@@ -125,6 +169,8 @@ export const useProducts = () => {
     fetchProducts,
     addProduct,
     deleteProduct,
+    updateProduct,
     getTokenAndUserId,
+
   };
 };
