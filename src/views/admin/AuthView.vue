@@ -35,7 +35,7 @@
 import { ref } from 'vue'
 import { useUsers } from '../../modules/auth/useUsers'
 
-const { fetchToken, registerUser, logout, name, email, password, user } = useUsers()
+const { fetchToken, registerUser, logout, name, email, password } = useUsers()
 const registerDialog = ref<HTMLDialogElement | null>(null)
 
 const toggleRegisterDialog = () => {
