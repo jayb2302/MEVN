@@ -32,3 +32,13 @@ export type CartItem = {
   quantity: number;
   imageURL: string;
 }
+
+export type Order = {
+  orderId: string;
+  items: CartItem[];
+  total: number;
+  createdAt: string;
+  _createdBy: string;
+  status: 'Processing' | 'Shipped' | 'Delivered';
+  archived?: boolean;
+};

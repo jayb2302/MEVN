@@ -36,7 +36,11 @@
             <input type="text" class="border p-1 pr-2 bg-[#181818] text-right w-28" placeholder="Enter code" v-model="code"> <!-- Coupon code -->
             <p class="text-right font-semibold">Grand Total: ${{ grandTotal() }} </p> <!-- Grand total in the cart -->
             <div class="flex justify-end">
-              <button class="bg-green-600 text-white p-2 mt-4 rounded hover:bg-green-700">Checkout</button> <!-- Checkout button on click -->
+              <router-link to="/cart" custom v-slot="{ navigate }">
+                <button @click="() => { handleCheckout(); navigate(); }" class="bg-green-600 text-white p-2 mt-4 rounded hover:bg-green-700">
+                  Checkout
+                </button>
+              </router-link>
             </div>
           </div>
         </div>
@@ -53,7 +57,11 @@ const toggleCart = ():void => {
 };
 
 const { cart, updateQuantity, cartTotal, cartTotalIndividualProduct, salesTax, grandTotal, code } = useCart();
+const emit = defineEmits(['close']);
 
+const handleCheckout = () => {
+  emit('close');
+};
 </script>
 
 <style scoped>

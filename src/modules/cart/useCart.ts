@@ -1,16 +1,17 @@
 import { ref } from "vue";
+import type { CartItem, Order } from "../../interfaces/interfaces";
 
-import type { CartItem } from "../../interfaces/interfaces";
+const cart = ref<CartItem[]>(
+  JSON.parse(localStorage.getItem("cart") || "[]")
+);
+const code = ref<string>("");
 
 export const useCart = () => {
-  const cart = ref<CartItem[]>(
-    JSON.parse(localStorage.getItem("cart") || "[]")
-  );
 
   const addToCart = (product: Omit<CartItem, "quantity">) => {
     const existingItem = cart.value.find((item) => item._id === product._id);
     if (existingItem) {
-      existingItem.quantity -= 1;
+      existingItem.quantity += 1;
       console.log("Updated existing item quantity", existingItem);
     } else {
       cart.value.push({ ...product, quantity: 1 });
@@ -61,8 +62,6 @@ export const useCart = () => {
     return Math.round(cartTotal() * taxRates * 100) / 100;
   };
 
-  const code = ref<string>("");
-
   const coupinCodeDiscount = (codes: string) => {
     const couponCodeAccepted = codes === "DISCOUNT";
     return couponCodeAccepted ? 0.9 : 1;
@@ -74,6 +73,49 @@ export const useCart = () => {
     );
   };
 
+  const placeOrder = () => {
+    const orders = JSON.parse(localStorage.getItem('orders') || '[]') as Order[];
+
+    const newOrder: Order = {
+      orderId: Date.now().toString(),
+      items: [...cart.value],
+      total: grandTotal(),
+      createdAt: new Date().toISOString(),
+      _createdBy: localStorage.getItem('userIDToken') || 'unknown',
+      status: 'Processing',
+    };
+
+    orders.push(newOrder);
+    localStorage.setItem('orders', JSON.stringify(orders));
+
+    cart.value = [];
+    localStorage.setItem('cart', JSON.stringify(cart.value));
+  };
+
+  const updateOrderStatus = (orderId: string, newStatus: Order['status']) => {
+    const stored = localStorage.getItem('orders');
+    if (!stored) return;
+
+    const orders = JSON.parse(stored) as Order[];
+    const index = orders.findIndex(o => o.orderId === orderId);
+    if (index !== -1) {
+      orders[index].status = newStatus;
+      localStorage.setItem('orders', JSON.stringify(orders));
+    }
+  };
+
+  const archiveOrder = (orderId: string) => {
+    const stored = localStorage.getItem('orders');
+    if (!stored) return;
+
+    const orders = JSON.parse(stored) as Order[];
+    const updatedOrders = orders.map(order =>
+      order.orderId === orderId ? { ...order, archived: true } : order
+    );
+
+    localStorage.setItem('orders', JSON.stringify(updatedOrders));
+  };
+
   return {
     cart,
     addToCart,
@@ -83,6 +125,9 @@ export const useCart = () => {
     cartTotalIndividualProduct,
     salesTax,
     code,
-    grandTotal
+    grandTotal,
+    placeOrder,
+    updateOrderStatus,
+    archiveOrder
   };
 };
