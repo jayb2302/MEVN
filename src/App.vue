@@ -10,21 +10,22 @@
         <RouterLink v-if="isLoggedIn" to="/orders" class="mr-4">Orders</RouterLink>
         <!-- RouterLink to products, Auth, Admin & and logout button -->
 
-        <button
+        <Button
+          icon="pi pi-sign-out"
           @click="logout"
           v-if="isLoggedIn"
           class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-        >
-          Logout
-        </button>
+        />
+
+        
 
         <!-- toggle cart button -->
-        <button
+        <Button
+          icon="pi pi-shopping-cart"
           @click="toggleCart"
           class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-        >
-          Cart
-        </button>
+        />
+        
 
         <!-- Routerlink to orders -->
       </nav>
@@ -46,6 +47,7 @@ import { RouterLink, RouterView } from "vue-router";
 import { useUsers } from "./modules/auth/useUsers";
 import { state } from "./modules/globalStates/state";
 import CartBasket from "./components/cart/CartBasketView.vue";
+import Button from "primevue/button";
 
 const isCartVisible = ref(false);
 

@@ -77,7 +77,7 @@ export const useCart = () => {
     const orders = JSON.parse(localStorage.getItem('orders') || '[]') as Order[];
 
     const newOrder: Order = {
-      orderId: Date.now().toString(),
+      _id: Date.now().toString(),
       items: [...cart.value],
       total: grandTotal(),
       createdAt: new Date().toISOString(),
@@ -97,7 +97,7 @@ export const useCart = () => {
     if (!stored) return;
 
     const orders = JSON.parse(stored) as Order[];
-    const index = orders.findIndex(o => o.orderId === orderId);
+    const index = orders.findIndex(o => o._id === orderId);
     if (index !== -1) {
       orders[index].status = newStatus;
       localStorage.setItem('orders', JSON.stringify(orders));
@@ -110,7 +110,7 @@ export const useCart = () => {
 
     const orders = JSON.parse(stored) as Order[];
     const updatedOrders = orders.map(order =>
-      order.orderId === orderId ? { ...order, archived: true } : order
+      order._id === orderId ? { ...order, archived: true } : order
     );
 
     localStorage.setItem('orders', JSON.stringify(updatedOrders));
