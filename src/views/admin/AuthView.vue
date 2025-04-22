@@ -10,16 +10,22 @@
     ></div>
 
     <!-- Right side with login and register forms -->
-    <div class="w-1/2 bg-[#181818] flex-grow text-gray-300 flex flex-col p-8">
+    <div class="w-1/2 bg-slate-300 flex-grow text-gray-300 flex flex-col p-8">
       <!-- Top part: Login and Logout -->
       <div class="space-y-4">
         <p class="text-2xl mb-4">Login / Logout</p>
         <FloatLabel variant="on">
-          <InputText id="email_input" v-model="email" />
+          <InputText id="email_input" v-model="email" fluid />
           <label for="email_input">Email</label>
         </FloatLabel>
         <FloatLabel variant="on">
-          <InputText id="password_input" v-model="password" />
+          <Password
+            v-model="password"
+            toggleMask
+            fluid
+            id="password_input"
+            :invalid="!password"
+          />
           <label for="password_input">Password</label>
         </FloatLabel>
         <!-- v-model for password -->
@@ -39,35 +45,35 @@
 
       <!-- Lower part: Register -->
       <div class="register-block">
-        <p
+        <Button
           class="text-2xl mt-24 mb-4 flex-nowrap cursor-pointer"
           @click="toggleRegisterDialog"
         >
           Click to register
-        </p>
+        </Button>
         <!-- Register button -->
-        <dialog ref="registerDialog">
-          <form class="flex flex-wrap">
-            <input
-              type="text"
-              class="m-2 p-2 border-b border-gray-500 bg-transparent text-gray-300 focus:outline-none flex-1"
-              placeholder="Name"
-              v-model="name"
-            />
+        <dialog ref="registerDialog" class="bg-slate-100">
+          <form class="flex flex-col gap-3">
+            <FloatLabel variant="on">
+              <InputText id="re_name_input" v-model="name" fluid/>
+              <label for="re_name_input">Name</label>
+            </FloatLabel>
             <!-- v-model for name -->
-            <input
-              type="text"
-              class="m-2 p-2 border-b border-gray-500 bg-transparent text-gray-300 focus:outline-none flex-1"
-              placeholder="Email"
-              v-model="email"
-            />
+            <FloatLabel variant="on">
+              <InputText id="re_email_input" v-model="email" class="w-full"/>
+              <label for="re_email_input">Email</label>
+            </FloatLabel>
             <!-- v-model for email -->
-            <input
-              type="password"
-              class="m-2 p-2 border-b border-gray-500 bg-transparent text-gray-300 focus:outline-none flex-grow w-full"
-              placeholder="Password"
-              v-model="password"
-            />
+            <FloatLabel variant="on">
+              <Password
+                v-model="password"
+                toggleMask
+                inputClass=" border-b border-gray-500 bg-transparent text-gray-300 focus:outline-none flex-grow w-full"
+                :invalid="!password"
+                id="re_password_input"
+              />
+              <label for="re_password_input">Password</label>
+            </FloatLabel>
             <!-- v-model for password -->
             <Button
               label="Register"
@@ -96,6 +102,7 @@ import { useUsers } from "@/modules/auth/useUsers";
 import Button from "primevue/button";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
+import Password from "primevue/password";
 const { fetchToken, registerUser, logout, name, email, password } = useUsers();
 const registerDialog = ref<HTMLDialogElement | null>(null);
 
@@ -117,7 +124,7 @@ const toggleRegisterDialog = () => {
 }
 
 dialog {
-  background-color: var(--vt-c-black, #181818);
+
   border-left: 1px solid var(--vt-c-gray-500, #9ca3af);
   padding: 1rem;
   position: absolute;
