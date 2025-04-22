@@ -1,64 +1,29 @@
 <template>
-  <div class="about">
+  <div class="about w-full p-4">
     <h1>This is an about page</h1>
-  </div>
-  <Tree :value="nodes" selectionMode="single" @node-select="onNodeSelect" />
-  <div class="file-preview mt-4">
-    <pre><code>{{ selectedFileContent }}</code></pre>
+    <p>{{ message }}</p>
+
+    <p data-testid="count">Count: {{ count }}</p>
+    <Button @click="increment" icon="pi pi-plus" severity="success" data-testid="increment" />
+    <Button @click="decrement" icon="pi pi-minus" severity="danger" data-testid="decrement" />
+    <Button @click="reset" icon="pi pi-refresh" data-testid="reset" />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { TreeNode } from 'primevue/treenode';
+import { ref } from "vue";
 
-interface AppTreeNode extends TreeNode {
-  parent?: AppTreeNode;
-}
-
-import { onMounted, ref } from "vue";
-import Tree from "primevue/tree";
-import { NodeService } from "@/service/NodeService";
-
-const nodes = ref<AppTreeNode[]>([]);
-const nodeService = new NodeService();
-const selectedFileContent = ref("");
-
-const onNodeSelect = async (node: AppTreeNode) => {
-  if (!node.children) {
-    const filePath = getFullPathFromNode(node); // You'll define this logic
-    try {
-      const response = await fetch(`/${filePath}`);
-      const content = await response.text();
-      selectedFileContent.value = content;
-    } catch {
-      selectedFileContent.value = "Error loading file.";
-    }
-  }
+const message = ref<string>("Check out the counting feature!");
+const count = ref<number>(0);
+const increment = () => {
+  count.value++;
 };
-
-function getFullPathFromNode(node: AppTreeNode): string {
-  const parts = [node.label];
-  let current = node.parent;
-
-  while (current) {
-    parts.unshift(current.label);
-    current = current.parent;
-  }
-
-  return parts.join('/');
-}
-
-onMounted(async () => {
-  nodes.value = await nodeService.getTreeNodes();
-});
+const decrement = () => {
+  count.value--;
+};
+const reset = () => {
+  count.value = 0;
+};
 </script>
 
-<style>
-@media (width < 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>
+<style></style>

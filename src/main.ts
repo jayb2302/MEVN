@@ -1,3 +1,5 @@
+/* eslint-disable vue/no-reserved-component-names */
+/* eslint-disable vue/multi-word-component-names */
 import './assets/main.css'
 import 'primeicons/primeicons.css';
 import { createApp } from 'vue'
@@ -6,6 +8,8 @@ import router from './router'
 import PrimeVue from 'primevue/config'
 import { definePreset } from '@primeuix/themes'
 import Aura from '@primeuix/themes/aura'
+
+import Button from 'primevue/button';
 
 const app = createApp(App)
 
@@ -32,5 +36,6 @@ app.use(PrimeVue,{
         preset: MyPreset
     }
 });
+app.component('Button', Button);
 app.use(router)
 app.mount('#app')

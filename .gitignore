@@ -28,3 +28,8 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+public/data/treenodes.json
+.gitignore
+scripts/generateTree.js
+src/service/NodeService.ts
+src/views/TreeNodes.vue
