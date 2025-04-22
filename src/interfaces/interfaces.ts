@@ -34,7 +34,7 @@ export type CartItem = {
 }
 
 export type Order = {
-  orderId: string;
+  _id: string;
   items: CartItem[];
   total: number;
   createdAt: string;

@@ -162,11 +162,34 @@ export const useProducts = () => {
     }
   }
 
+  // JSdoc this function 
+  /**
+   * Fetches a product by its ID.
+   * @param {string} id - The ID of the product to fetch.
+   * @returns {Promise<Product[] | null>}
+   * @throws {Error} - Throws an error if the fetch fails or the response is not ok.
+   **/
+  const fetchProductById = async(id: string): Promise<Product[] | null> => {
+    try {
+      const response = await fetch(`http://localhost:4000/api/products/${id}`);
+      if (!response.ok) {
+        throw new Error("No data available");
+      }
+      const data: Product[] = await response.json();
+      return data;
+    }
+    catch (err) {
+      console.log("error", err);
+      return null;
+    }
+  }
+
   return {
     error,
     loading,
     products,
     fetchProducts,
+    fetchProductById,
     addProduct,
     deleteProduct,
     updateProduct,
